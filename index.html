@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#090c12">
+  <meta name="description" content="One room. One hundred monsters. How long can you last?">
+  <title>One Room, 100 Monsters</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="One Room home"><span class="brand-mark">◈</span> ONE ROOM <i>/</i> 100 MONSTERS</a>
+      <div class="top-actions"><span class="live-label"><b></b> SURVIVAL MODE</span><button class="icon-button" id="sound-toggle" aria-label="Toggle sound" title="Toggle sound">♫</button><button class="icon-button" id="fullscreen" aria-label="Toggle fullscreen" title="Toggle fullscreen">⛶</button></div>
+    </header>
+
+    <section class="game-frame" aria-label="Game area">
+      <canvas id="game" aria-label="One Room, 100 Monsters game canvas"></canvas>
+      <div class="hud" id="hud" hidden>
+        <div class="hud-top">
+          <div class="health-block"><div class="hud-label"><span>VITALS</span><span id="health-text">100 / 100</span></div><div class="meter health-meter"><i id="health-fill"></i></div></div>
+          <div class="wave-block"><div class="wave-kicker">CURRENT WAVE</div><div class="wave-value" id="wave-value">01</div></div>
+          <div class="score-block"><div class="hud-label"><span>RUN SCORE</span><span class="kill-count" id="kill-count">0 KILLS</span></div><strong id="score-value">000000</strong><div class="timer" id="timer">00:00</div></div>
+        </div>
+        <div class="boss-hud" id="boss-hud" hidden><div class="boss-title">ELITE // <span id="boss-name">THE WARDEN</span></div><div class="meter boss-meter"><i id="boss-fill"></i></div></div>
+        <div class="bottom-hud"><div class="level-chip">LV <b id="level-value">01</b></div><div class="xp-meter"><div class="xp-caption"><span>EXPERIENCE</span><span id="xp-text">0 / 8</span></div><div class="meter"><i id="xp-fill"></i></div></div><div class="dash-chip" id="dash-chip">SPACE <b>DASH READY</b></div><div class="combo-chip" id="combo-chip" hidden>COMBO <b id="combo-value">×2</b></div></div>
+      </div>
+      <div class="overlay" id="overlay">
+        <div class="panel title-panel" id="title-panel">
+          <div class="eyebrow"><span class="eyebrow-line"></span> THE LAST ROOM // 01 <span class="eyebrow-line"></span></div>
+          <h1>ONE ROOM<span>,</span><br><em>100 MONSTERS</em></h1>
+          <p class="tagline">No exits. No backup. Just you and the swarm.</p>
+          <div class="title-meta"><span><b>01</b> SURVIVOR</span><span><b>∞</b> THREATS</span><span><b id="best-title">000000</b> BEST SCORE</span></div>
+          <div class="menu-buttons"><button class="button button-primary" id="play-button"><span>ENTER THE ROOM</span><b>↗</b></button><button class="button button-quiet" id="how-button">HOW TO SURVIVE <span>＋</span></button><button class="button button-quiet" id="settings-button">SETTINGS <span>＋</span></button></div>
+          <div class="panel-foot"><span>BUILD 1.0.0 // ENDLESS PROTOCOL</span><span>BEST RUN <b id="best-foot">00:00</b></span></div>
+        </div>
+        <div class="panel info-panel" id="how-panel" hidden>
+          <div class="eyebrow"><span class="eyebrow-line"></span> FIELD MANUAL <span class="eyebrow-line"></span></div><h2>STAY <em>MOVING.</em></h2>
+          <div class="control-list"><div><kbd>W A S D</kbd><span>Move through the room</span></div><div><kbd>↑ ← ↓ →</kbd><span>Alternate movement</span></div><div><kbd>MOUSE</kbd><span>Aim your weapon</span></div><div><kbd>CLICK</kbd><span>Fire at the swarm</span></div><div><kbd>SPACE</kbd><span>Dash through danger</span></div><div><kbd>ESC</kbd><span>Pause the run</span></div></div>
+          <p class="info-note">Collect the fragments monsters leave behind. Level up, pick an upgrade, and hold the room.</p><button class="button button-primary" id="how-back">GOT IT <b>↗</b></button>
+        </div>
+        <div class="panel info-panel" id="settings-panel" hidden>
+          <div class="eyebrow"><span class="eyebrow-line"></span> SYSTEM CONFIG <span class="eyebrow-line"></span></div><h2>MAKE IT <em>YOURS.</em></h2>
+          <div class="setting-row"><div><b>SCREEN SHAKE</b><small>Impact feedback</small></div><button class="toggle" id="shake-toggle" aria-pressed="true"><i></i></button></div>
+          <div class="setting-row"><div><b>DAMAGE NUMBERS</b><small>Show combat damage</small></div><button class="toggle" id="numbers-toggle" aria-pressed="true"><i></i></button></div>
+          <div class="setting-row"><div><b>REDUCED EFFECTS</b><small>Fewer particles and flashes</small></div><button class="toggle" id="effects-toggle" aria-pressed="false"><i></i></button></div>
+          <div class="setting-row volume-row"><div><b>SOUND LEVEL</b><small>Generated arcade effects</small></div><input id="volume-slider" type="range" min="0" max="100" value="55"></div>
+          <button class="button button-primary" id="settings-back">DONE <b>↗</b></button>
+        </div>
+        <div class="panel pause-panel" id="pause-panel" hidden>
+          <div class="eyebrow"><span class="eyebrow-line"></span> RUN SUSPENDED <span class="eyebrow-line"></span></div><h2>TAKE A <em>BREATH.</em></h2><button class="button button-primary" id="resume-button">BACK IN <b>↗</b></button><button class="button button-quiet" id="pause-restart">RESTART RUN <span>↻</span></button><button class="button button-quiet" id="pause-menu">QUIT TO MENU <span>⌂</span></button>
+        </div>
+        <div class="panel upgrade-panel" id="upgrade-panel" hidden>
+          <div class="eyebrow"><span class="eyebrow-line"></span> ADAPT OR DIE // LEVEL UP <span class="eyebrow-line"></span></div><h2>CHOOSE YOUR <em>EDGE.</em></h2><div class="upgrade-cards" id="upgrade-cards"></div><div class="panel-foot centered-foot">PRESS 1, 2, OR 3 TO SELECT</div>
+        </div>
+        <div class="panel gameover-panel" id="gameover-panel" hidden>
+          <div class="eyebrow"><span class="eyebrow-line"></span> SIGNAL LOST // RUN COMPLETE <span class="eyebrow-line"></span></div><h2>THE ROOM <em>WON.</em></h2><p class="tagline" id="run-verdict">You made them work for it.</p><div class="stats-grid"><div><small>FINAL SCORE</small><b id="final-score">000000</b></div><div><small>TIME SURVIVED</small><b id="final-time">00:00</b></div><div><small>MONSTERS DOWN</small><b id="final-kills">0</b></div><div><small>WAVE / LEVEL</small><b id="final-wave">01 / 01</b></div></div><div class="record-note" id="record-note" hidden>✦ NEW PERSONAL BEST ✦</div><div class="menu-buttons"><button class="button button-primary" id="retry-button"><span>RUN IT BACK</span><b>↗</b></button><button class="button button-quiet" id="gameover-menu">BACK TO MENU <span>⌂</span></button></div><div class="panel-foot"><span>THE ROOM IS ALWAYS HUNGRY</span><span>ONE MORE RUN?</span></div>
+        </div>
+      </div>
+      <div class="toast" id="toast" hidden></div>
+      <button class="pause-button" id="pause-button" aria-label="Pause" hidden>Ⅱ</button>
+    </section>
+    <footer class="page-foot"><span>MOVE FAST. AIM TRUE. LEAVE NO MONSTER STANDING.</span><span>MADE FOR THE ENDLESS SHIFT <i>✳</i></span></footer>
+  </main>
+  <script src="src/game.js"></script>
+</body>
+</html>
