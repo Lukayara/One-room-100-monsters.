@@ -36,15 +36,7 @@ Then visit `http://localhost:8000`.
 
 ## Deploy to GitHub Pages
 
-This is a static site and can be served directly from the repository root.
-
-1. Create a GitHub repository, for example `one-room-100-monsters`, and push these files to its `main` branch.
-2. In the repository, open **Settings → Pages**.
-3. Under **Build and deployment**, choose **Deploy from a branch**.
-4. Select branch **main** and folder **/(root)**, then save.
-5. Wait for the Pages deployment to finish. GitHub will show the public URL on the Pages settings screen.
-
-The game uses relative paths and requires no GitHub Actions workflow. It has not been published from this folder; a GitHub account/repository connection is not available in this workspace.
+The `main` branch is deployed with the GitHub Actions workflow in `.github/workflows/deploy.yml`. The game is a static site with relative paths and no build step. In the repository, set **Settings → Pages → Build and deployment → Source** to **GitHub Actions** if it is not already selected. Each push to `main` then publishes the site.
 
 ## Project structure
 
@@ -54,6 +46,7 @@ style.css        Responsive menus, HUD, and theme
 src/game.js      Game loop, Canvas rendering, combat, progression, and saves
 README.md        Setup and deployment instructions
 LICENSE          MIT license
+.github/workflows/deploy.yml  Publish to GitHub Pages on each main push
 ```
 
 ## Development notes
@@ -76,7 +69,6 @@ MIT. See [LICENSE](LICENSE).
 - High scores and settings are stored per browser, not synced between devices.
 - Sound effects are synthesized; there is no music track.
 - The design targets desktop keyboard and mouse; touch controls and controller support are not included.
-- The game source has been syntax-checked, but it has not been published to or verified on a public Pages URL.
 
 ## Future improvements
 
