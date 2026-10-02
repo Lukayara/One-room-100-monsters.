@@ -12,6 +12,7 @@ A single-room, top-down survival game built with Canvas, CSS, and vanilla JavaSc
 - Score, run statistics, and a locally saved personal best
 - Pause, settings, generated sound effects, fullscreen, and reduced-effects options
 - Responsive layouts for phones, tablets, and landscape screens
+- An offline iPhone/iPad app wrapper and downloadable unsigned IPA build
 - No build step, server, image downloads, or third-party runtime dependencies
 
 ## Controls
@@ -28,6 +29,12 @@ A single-room, top-down survival game built with Canvas, CSS, and vanilla JavaSc
 | Gamepad | Left stick moves; right stick aims; A / Cross fires; B / Circle dashes; Menu pauses |
 
 Use the **Input** selector in the top bar to choose automatic detection, touch, gamepad, keyboard, or VR theater. Gamepad input is detected automatically in Auto mode. VR theater fills the browser display with the 2D game; this Canvas game does not currently provide stereoscopic rendering or head tracking.
+
+## iPhone and iPad app
+
+Every push to `main` that changes the game or `ios/` starts the **Build unsigned iOS IPA** workflow on a macOS runner. Download `OneRoom-unsigned.ipa` from that run's **Artifacts** section. The app bundles the game for offline play, opens in landscape, hides system chrome, and supports iPhone and iPad. The bundle identifier is `com.lukayara.oneroom100monsters`.
+
+The IPA is intentionally unsigned. Before installing it, sign it with an Apple distribution/development identity and a provisioning profile that matches the bundle identifier and intended devices; a certificate by itself does not authorize installation on iOS devices. See [ios/README.md](ios/README.md) for building and signing notes.
 
 ## Run locally
 
@@ -53,6 +60,8 @@ src/game.js      Game loop, Canvas rendering, combat, progression, and saves
 README.md        Setup and deployment instructions
 LICENSE          MIT license
 .github/workflows/deploy.yml  Publish to GitHub Pages on each main push
+.github/workflows/ios-ipa.yml Build an unsigned iOS IPA on macOS
+ios/OneRoom/                Native WKWebView wrapper and app icon
 ```
 
 ## Development notes

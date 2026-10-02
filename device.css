@@ -37,3 +37,11 @@
 .game-frame:fullscreen{width:100vw;height:100dvh;min-height:0;max-height:none;aspect-ratio:auto;border:0;border-radius:0}
 .game-frame:fullscreen .touch-controls{padding:max(14px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-right)) max(14px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left))}
 @media (max-width:760px){.game-frame:fullscreen .overlay{padding:8px}}
+/* The iOS app launches landscape so the arena and twin-stick controls have room. */
+@media (max-height:600px) and (orientation:landscape){
+  body{display:grid;place-items:center;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+  .shell{width:min(100%,160dvh);max-width:none}
+  .topbar,.page-foot{display:none}
+  .game-frame{width:100%;min-height:0;max-height:none;aspect-ratio:16/9;border:0;border-radius:0;box-shadow:none}
+  .touch-controls{padding:max(8px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left))}
+}
