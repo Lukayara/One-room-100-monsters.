@@ -1,9 +1,8 @@
-name: Deploy to GitHub Pages
+name: Build app and deploy site
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -14,7 +13,60 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  build-ios:
+    runs-on: macos-latest
+    steps:
+      - name: Check out game
+        uses: actions/checkout@v4
+
+      - name: Prepare bundled game files
+        run: bash ios/prepare-web.sh
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        run: xcodegen generate --spec ios/OneRoom/project.yml --project ios/OneRoom
+
+      - name: Build for iPhone and iPad
+        run: >-
+          xcodebuild
+          -project ios/OneRoom/OneRoom.xcodeproj
+          -scheme OneRoom
+          -configuration Release
+          -sdk iphoneos
+          -destination 'generic/platform=iOS'
+          -derivedDataPath build/DerivedData
+          CODE_SIGNING_ALLOWED=NO
+          build
+
+      - name: Package unsigned IPA
+        shell: bash
+        run: |
+          mkdir -p build/ipa/Payload
+          cp -R build/DerivedData/Build/Products/Release-iphoneos/OneRoom.app build/ipa/Payload/OneRoom.app
+          cd build/ipa
+          zip -qr OneRoom-unsigned.ipa Payload
+
+      - name: Upload IPA build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: OneRoom-unsigned-IPA
+          path: build/ipa/OneRoom-unsigned.ipa
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Preserve IPA for Pages deployment
+        uses: actions/upload-artifact@v4
+        with:
+          name: OneRoom-ipa-for-pages
+          path: build/ipa/OneRoom-unsigned.ipa
+          if-no-files-found: error
+          retention-days: 1
+
   deploy:
+    needs: build-ios
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       pages: write
@@ -22,16 +74,47 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v6
+      - name: Check out game
+        uses: actions/checkout@v4
+
+      - name: Download IPA for the site
+        uses: actions/download-artifact@v4
+        with:
+          name: OneRoom-ipa-for-pages
+          path: build/ipa
+
+      - name: Assemble website
+        shell: bash
+        run: |
+          mkdir -p _site/src _site/downloads
+          cp index.html style.css device.css _site/
+          cp src/game.js _site/src/game.js
+          cp build/ipa/OneRoom-unsigned.ipa _site/downloads/OneRoom-unsigned.ipa
+          cat > _site/downloads/index.html <<'HTML'
+          <!doctype html>
+          <html lang="en">
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+            <meta name="theme-color" content="#090c12">
+            <title>Download One Room, 100 Monsters for iOS</title>
+            <style>
+              *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:radial-gradient(ellipse at 50% 40%,#141d27,#090c12 68%);color:#edf0f5;font:16px system-ui,sans-serif}.card{width:min(560px,100%);padding:clamp(24px,7vw,48px);border:1px solid #303b47;border-radius:8px;background:#10151ee8;box-shadow:0 24px 90px #0008}.kicker{color:#c8f169;font:12px ui-monospace,monospace;letter-spacing:.15em}h1{margin:14px 0;font-size:clamp(32px,8vw,48px);line-height:1.05}p{color:#abb5c1;line-height:1.7}.download{display:block;margin:26px 0 14px;padding:16px 18px;border-radius:5px;background:#c8f169;color:#11170b;text-align:center;text-decoration:none;font-weight:800}.small{font-size:13px}.back{color:#c8f169}
+            </style>
+          </head>
+          <body><main class="card"><div class="kicker">ONE ROOM // IOS BUILD</div><h1>Take the room with you.</h1><p>Offline iPhone and iPad build. iPhone opens in landscape; iPad supports portrait and landscape.</p><a class="download" href="OneRoom-unsigned.ipa" download>DOWNLOAD UNSIGNED IPA</a><p class="small">This build is unsigned. Before installing, sign it with a certificate and a provisioning profile for <code>com.lukayara.oneroom100monsters</code>. The profile must match the signing identity and intended installation method.</p><a class="back" href="../">← Back to the game</a></main></body>
+          </html>
+          HTML
+
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
-      - name: Upload site files
-        uses: actions/upload-pages-artifact@v4
+
+      - name: Upload website
+        uses: actions/upload-pages-artifact@v3
         with:
-          path: .
-      - name: Deploy site
+          path: _site
+
+      - name: Publish website and IPA
         id: deployment
         uses: actions/deploy-pages@v4

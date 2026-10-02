@@ -12,7 +12,7 @@ xcodegen generate --spec ios/OneRoom/project.yml --project ios/OneRoom
 xcodebuild -project ios/OneRoom/OneRoom.xcodeproj -scheme OneRoom -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' -derivedDataPath build/DerivedData CODE_SIGNING_ALLOWED=NO build
 ```
 
-The GitHub Actions workflow runs these steps on a macOS runner and uploads `OneRoom-unsigned.ipa` as a 30-day artifact.
+The GitHub Actions workflow runs these steps on a macOS runner, uploads `OneRoom-unsigned.ipa` as a 30-day artifact, and publishes it at the GitHub Pages download page.
 
 ## Sign before installing
 

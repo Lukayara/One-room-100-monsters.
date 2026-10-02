@@ -32,7 +32,7 @@ Use the **Input** selector in the top bar to choose automatic detection, touch, 
 
 ## iPhone and iPad app
 
-Every push to `main` that changes the game or `ios/` starts the **Build unsigned iOS IPA** workflow on a macOS runner. Download `OneRoom-unsigned.ipa` from that run's **Artifacts** section. The app bundles the game for offline play, opens in landscape, hides system chrome, and supports iPhone and iPad. The bundle identifier is `com.lukayara.oneroom100monsters`.
+Every push to `main` builds the unsigned iOS app on a macOS runner. Download the IPA from the [iOS app page](https://lukayara.github.io/One-room-100-monsters./downloads/) or from that run's **Artifacts** section. The app bundles the game for offline play, opens in landscape on iPhone, supports both orientations on iPad, and hides system chrome during play. The bundle identifier is `com.lukayara.oneroom100monsters`.
 
 The IPA is intentionally unsigned. Before installing it, sign it with an Apple distribution/development identity and a provisioning profile that matches the bundle identifier and intended devices; a certificate by itself does not authorize installation on iOS devices. See [ios/README.md](ios/README.md) for building and signing notes.
 
@@ -48,7 +48,7 @@ Then visit `http://localhost:8000`.
 
 ## Deploy to GitHub Pages
 
-The `main` branch is deployed with the GitHub Actions workflow in `.github/workflows/deploy.yml`. The game is a static site with relative paths and no build step. In the repository, set **Settings → Pages → Build and deployment → Source** to **GitHub Actions** if it is not already selected. Each push to `main` then publishes the site.
+The `main` branch is deployed with `.github/workflows/deploy.yml`. That workflow builds the unsigned iOS app on macOS, publishes the static game and an IPA download page to GitHub Pages, and saves a 30-day workflow artifact. Set **Settings → Pages → Build and deployment → Source** to **GitHub Actions** if needed.
 
 ## Project structure
 
@@ -59,8 +59,7 @@ device.css       Responsive layouts and touch controls
 src/game.js      Game loop, Canvas rendering, combat, progression, and saves
 README.md        Setup and deployment instructions
 LICENSE          MIT license
-.github/workflows/deploy.yml  Publish to GitHub Pages on each main push
-.github/workflows/ios-ipa.yml Build an unsigned iOS IPA on macOS
+.github/workflows/deploy.yml  Build the iOS app and publish game + IPA on main pushes
 ios/OneRoom/                Native WKWebView wrapper and app icon
 ```
 
