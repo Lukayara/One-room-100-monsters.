@@ -3,6 +3,7 @@ name: Build app and deploy site
 on:
   push:
     branches: [main]
+    tags: ["v*"]
   workflow_dispatch:
 
 permissions:
@@ -65,6 +66,7 @@ jobs:
           retention-days: 1
 
   deploy:
+    if: github.ref == 'refs/heads/main'
     needs: build-ios
     runs-on: ubuntu-latest
     permissions:
@@ -118,3 +120,32 @@ jobs:
       - name: Publish website and IPA
         id: deployment
         uses: actions/deploy-pages@v4
+
+  release-ipa:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build-ios
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out release notes
+        uses: actions/checkout@v4
+
+      - name: Download IPA build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: OneRoom-unsigned-IPA
+          path: build/ipa
+
+      - name: Attach IPA to GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" build/ipa/OneRoom-unsigned.ipa --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" \
+              build/ipa/OneRoom-unsigned.ipa#"One Room, 100 Monsters iOS IPA (unsigned)" \
+              --title "One Room, 100 Monsters $GITHUB_REF_NAME — iOS build" \
+              --notes-file ios/release-notes.md
+          fi
