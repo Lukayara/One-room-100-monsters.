@@ -5,12 +5,13 @@ A single-room, top-down survival game built with Canvas, CSS, and vanilla JavaSc
 ## Features
 
 - One responsive arena with procedural Canvas visuals
-- Keyboard movement, mouse aiming, automatic fire while holding click, and a dash
+- Keyboard, touch, and gamepad controls with automatic device detection
 - Five enemy archetypes: Drifter, Skitter, Brute, Spitter, and Nestling; plus the Warden elite
 - Experience drops, level-up choices, 18 run upgrades, healing and overdrive pickups
 - Escalating waves and a 100-monster milestone event
 - Score, run statistics, and a locally saved personal best
 - Pause, settings, generated sound effects, fullscreen, and reduced-effects options
+- Responsive layouts for phones, tablets, and landscape screens
 - No build step, server, image downloads, or third-party runtime dependencies
 
 ## Controls
@@ -23,6 +24,10 @@ A single-room, top-down survival game built with Canvas, CSS, and vanilla JavaSc
 | Space | Dash with brief invulnerability |
 | Esc | Pause or resume |
 | 1, 2, or 3 | Choose a level-up upgrade |
+| Touch screen | Left virtual stick moves; right stick aims and fires; Dash and Pause buttons |
+| Gamepad | Left stick moves; right stick aims; A / Cross fires; B / Circle dashes; Menu pauses |
+
+Use the **Input** selector in the top bar to choose automatic detection, touch, gamepad, keyboard, or VR theater. Gamepad input is detected automatically in Auto mode. VR theater fills the browser display with the 2D game; this Canvas game does not currently provide stereoscopic rendering or head tracking.
 
 ## Run locally
 
@@ -42,7 +47,8 @@ The `main` branch is deployed with the GitHub Actions workflow in `.github/workf
 
 ```text
 index.html       Page shell and game UI
-style.css        Responsive menus, HUD, and theme
+style.css        Menus, HUD, and theme
+device.css       Responsive layouts and touch controls
 src/game.js      Game loop, Canvas rendering, combat, progression, and saves
 README.md        Setup and deployment instructions
 LICENSE          MIT license
@@ -68,8 +74,8 @@ MIT. See [LICENSE](LICENSE).
 
 - High scores and settings are stored per browser, not synced between devices.
 - Sound effects are synthesized; there is no music track.
-- The design targets desktop keyboard and mouse; touch controls and controller support are not included.
+- VR theater is a fullscreen 2D view; immersive stereoscopic rendering and tracked VR motion are not implemented.
 
 ## Future improvements
 
-Music, touch controls, additional elite patterns, and more run modifiers.
+Music, immersive VR rendering, additional elite patterns, and more run modifiers.

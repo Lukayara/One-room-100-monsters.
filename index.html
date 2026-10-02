@@ -10,12 +10,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="device.css">
 </head>
 <body>
   <main class="shell">
     <header class="topbar">
       <a class="brand" href="#" aria-label="One Room home"><span class="brand-mark">◈</span> ONE ROOM <i>/</i> 100 MONSTERS</a>
-      <div class="top-actions"><span class="live-label"><b></b> SURVIVAL MODE</span><button class="icon-button" id="sound-toggle" aria-label="Toggle sound" title="Toggle sound">♫</button><button class="icon-button" id="fullscreen" aria-label="Toggle fullscreen" title="Toggle fullscreen">⛶</button></div>
+      <div class="top-actions"><span class="live-label"><b></b> SURVIVAL MODE</span><label class="mode-control"><span>INPUT</span><select id="input-mode" aria-label="Choose input mode"><option value="auto">AUTO</option><option value="touch">TOUCH</option><option value="gamepad">GAMEPAD</option><option value="keyboard">KEYBOARD</option><option value="vr">VR THEATER</option></select></label><button class="icon-button" id="sound-toggle" aria-label="Toggle sound" title="Toggle sound">♫</button><button class="icon-button" id="fullscreen" aria-label="Toggle fullscreen" title="Fullscreen / VR theater (flat 2D)">⛶</button></div>
     </header>
 
     <section class="game-frame" aria-label="Game area">
@@ -40,7 +41,7 @@
         </div>
         <div class="panel info-panel" id="how-panel" hidden>
           <div class="eyebrow"><span class="eyebrow-line"></span> FIELD MANUAL <span class="eyebrow-line"></span></div><h2>STAY <em>MOVING.</em></h2>
-          <div class="control-list"><div><kbd>W A S D</kbd><span>Move through the room</span></div><div><kbd>↑ ← ↓ →</kbd><span>Alternate movement</span></div><div><kbd>MOUSE</kbd><span>Aim your weapon</span></div><div><kbd>CLICK</kbd><span>Fire at the swarm</span></div><div><kbd>SPACE</kbd><span>Dash through danger</span></div><div><kbd>ESC</kbd><span>Pause the run</span></div></div>
+          <div class="control-list"><div><kbd>W A S D</kbd><span>Move through the room</span></div><div><kbd>↑ ← ↓ →</kbd><span>Alternate movement</span></div><div><kbd>MOUSE</kbd><span>Aim your weapon</span></div><div><kbd>CLICK</kbd><span>Fire at the swarm</span></div><div><kbd>SPACE</kbd><span>Dash through danger</span></div><div><kbd>PAD</kbd><span>Left stick moves; right stick aims and fires</span></div><div><kbd>ESC</kbd><span>Pause the run</span></div></div>
           <p class="info-note">Collect the fragments monsters leave behind. Level up, pick an upgrade, and hold the room.</p><button class="button button-primary" id="how-back">GOT IT <b>↗</b></button>
         </div>
         <div class="panel info-panel" id="settings-panel" hidden>
@@ -63,6 +64,10 @@
       </div>
       <div class="toast" id="toast" hidden></div>
       <button class="pause-button" id="pause-button" aria-label="Pause" hidden>Ⅱ</button>
+      <div class="touch-controls" id="touch-controls" hidden aria-label="Touch game controls">
+        <div class="stick-wrap"><span class="control-caption">MOVE</span><button class="virtual-stick" id="move-stick" aria-label="Move joystick"><i></i></button></div>
+        <div class="touch-actions"><div class="stick-wrap aim-wrap"><span class="control-caption">AIM + FIRE</span><button class="virtual-stick aim-stick" id="aim-stick" aria-label="Aim and fire joystick"><i></i></button></div><button class="touch-action" id="touch-dash" aria-label="Dash">DASH</button><button class="touch-action touch-pause" id="touch-pause" aria-label="Pause">Ⅱ</button></div>
+      </div>
     </section>
     <footer class="page-foot"><span>MOVE FAST. AIM TRUE. LEAVE NO MONSTER STANDING.</span><span>MADE FOR THE ENDLESS SHIFT <i>✳</i></span></footer>
   </main>

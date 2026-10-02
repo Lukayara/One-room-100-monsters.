@@ -1,0 +1,39 @@
+/* Device layouts and inputs. The game keeps its 16:9 arena on every screen. */
+.mode-control{display:flex;align-items:center;gap:6px;color:#758091;font-size:8px;letter-spacing:.1em}
+.mode-control select{max-width:100px;padding:6px 7px;border:1px solid #29313d;border-radius:3px;background:#121822;color:#dfe3e9;font:9px var(--mono);letter-spacing:.06em}
+.mode-control select:focus-visible,.icon-button:focus-visible,.touch-controls button:focus-visible{outline:2px solid var(--acid);outline-offset:2px}
+.touch-controls{position:absolute;z-index:8;inset:0;display:flex;align-items:flex-end;justify-content:space-between;padding:10px 13px;pointer-events:none;touch-action:none;user-select:none;-webkit-user-select:none}
+.touch-controls[hidden]{display:none}
+.stick-wrap,.touch-actions{display:flex;align-items:center;gap:9px;pointer-events:none}
+.stick-wrap{flex-direction:column;gap:4px}
+.control-caption{color:#edf0f5b8;font-size:8px;font-family:var(--mono);letter-spacing:.12em;text-shadow:0 1px 4px #000}
+.virtual-stick{position:relative;width:92px;height:92px;border:1px solid #ffffff55;border-radius:50%;background:#10151e9c;box-shadow:inset 0 0 0 7px #ffffff08,0 5px 20px #0007;pointer-events:auto;touch-action:none;display:grid;place-items:center;padding:0}
+.virtual-stick i{display:block;width:36px;height:36px;border:1px solid #c8f16999;border-radius:50%;background:#c8f16938;box-shadow:0 0 16px #c8f16945;transition:transform 35ms linear}
+.touch-actions{align-items:flex-end}
+.touch-action{width:58px;height:58px;border:1px solid #ffbd658c;border-radius:50%;background:#251b16d9;color:#ffcf8b;font:700 9px var(--mono);letter-spacing:.04em;pointer-events:auto;touch-action:manipulation;box-shadow:0 5px 20px #0008}
+.touch-pause{width:40px;height:40px;align-self:flex-start;border-color:#ffffff55;background:#10151edb;color:#edf0f5;font-size:16px}
+.aim-wrap{order:0}.touch-action:not(.touch-pause){order:1}.touch-pause{order:2}
+@media (max-width:760px){
+  body{display:block;min-height:100dvh;padding:max(8px,env(safe-area-inset-top)) max(8px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left))}
+  .shell{width:100%;max-width:none}
+  .topbar{height:42px;gap:8px}.brand{font-size:12px;white-space:nowrap}.top-actions{gap:6px}.live-label{font-size:7px;gap:5px}.mode-control>span{display:none}.mode-control select{max-width:84px;padding:6px 4px;font-size:8px}.icon-button{width:29px;height:29px}
+  .game-frame{width:100%;min-height:0;max-height:none;aspect-ratio:16/9;border-radius:3px;box-shadow:0 10px 35px #0009,0 0 0 3px #ffffff04}
+  .page-foot{height:auto;min-height:34px;font-size:7px;gap:8px}.page-foot span:last-child{display:none}
+  .virtual-stick{width:clamp(68px,20vw,92px);height:clamp(68px,20vw,92px)}.virtual-stick i{width:32px;height:32px}.touch-action{width:clamp(48px,14vw,58px);height:clamp(48px,14vw,58px);font-size:8px}.touch-pause{width:38px;height:38px}.touch-controls{padding:7px 8px}
+  .panel{max-height:calc(100% - 18px);overflow-y:auto}.title-panel{padding:22px 20px}.title-panel h1{font-size:clamp(42px,12vw,68px)}.info-panel,.pause-panel,.upgrade-panel,.gameover-panel{padding:20px}
+}
+@media (max-width:420px){
+  .brand-mark{margin-right:4px}.brand{font-size:10px;letter-spacing:.03em}.top-actions{gap:4px}.live-label{display:none}.mode-control select{max-width:76px}.page-foot{letter-spacing:.05em}.game-frame .hud-top{gap:5px}.game-frame .hud-label{font-size:7px}.game-frame .wave-value{font-size:20px}
+}
+@media (max-height:520px) and (orientation:landscape){
+  body{padding:5px}.topbar{height:32px}.game-frame{max-height:calc(100dvh - 74px);min-height:0}.page-foot{min-height:28px}.touch-controls{padding:4px 8px}
+}
+@media (pointer:coarse){
+  canvas{cursor:default;touch-action:none}.button,.icon-button,.toggle,.touch-action,.mode-control select{min-height:40px}.touch-controls button{-webkit-tap-highlight-color:transparent}
+}
+@media (pointer:coarse) and (min-width:761px) and (max-width:1100px){
+  body{padding:14px}.shell{width:100%;max-width:none}.game-frame{min-height:0;max-height:none}.page-foot{font-size:8px}.virtual-stick{width:108px;height:108px}
+}
+.game-frame:fullscreen{width:100vw;height:100dvh;min-height:0;max-height:none;aspect-ratio:auto;border:0;border-radius:0}
+.game-frame:fullscreen .touch-controls{padding:max(14px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-right)) max(14px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left))}
+@media (max-width:760px){.game-frame:fullscreen .overlay{padding:8px}}
