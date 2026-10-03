@@ -1,4 +1,8 @@
 /* Device layouts and inputs. The game keeps its 16:9 arena on every screen. */
+/* Keep the bundled game feeling like a touch-first app instead of selectable web content. */
+html,body,body *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+html,body{overscroll-behavior:none}
+input,textarea,[contenteditable="true"]{-webkit-user-select:text;user-select:text}
 .mode-control{display:flex;align-items:center;gap:6px;color:#758091;font-size:8px;letter-spacing:.1em}
 .mode-control select{max-width:100px;padding:6px 7px;border:1px solid #29313d;border-radius:3px;background:#121822;color:#dfe3e9;font:9px var(--mono);letter-spacing:.06em}
 .mode-control select:focus-visible,.icon-button:focus-visible,.touch-controls button:focus-visible{outline:2px solid var(--acid);outline-offset:2px}
@@ -7,7 +11,7 @@
 .stick-wrap,.touch-actions{display:flex;align-items:center;gap:9px;pointer-events:none}
 .stick-wrap{flex-direction:column;gap:4px}
 .control-caption{color:#edf0f5b8;font-size:8px;font-family:var(--mono);letter-spacing:.12em;text-shadow:0 1px 4px #000}
-.virtual-stick{position:relative;width:92px;height:92px;border:1px solid #ffffff55;border-radius:50%;background:#10151e9c;box-shadow:inset 0 0 0 7px #ffffff08,0 5px 20px #0007;pointer-events:auto;touch-action:none;display:grid;place-items:center;padding:0}
+.virtual-stick{position:relative;width:92px;height:92px;border:1px solid #ffffff55;border-radius:50%;background:#10151e9c;box-shadow:inset 0 0 0 7px #ffffff08,0 5px 20px #0007;pointer-events:auto;touch-action:none;display:grid;place-items:center;padding:0;transition:transform 45ms linear}
 .virtual-stick i{display:block;width:36px;height:36px;border:1px solid #c8f16999;border-radius:50%;background:#c8f16938;box-shadow:0 0 16px #c8f16945;transition:transform 35ms linear}
 .touch-actions{align-items:flex-end}
 .touch-action{width:58px;height:58px;border:1px solid #ffbd658c;border-radius:50%;background:#251b16d9;color:#ffcf8b;font:700 9px var(--mono);letter-spacing:.04em;pointer-events:auto;touch-action:manipulation;box-shadow:0 5px 20px #0008}

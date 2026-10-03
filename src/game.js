@@ -111,7 +111,47 @@
   const inputMode=$('#input-mode'), coarse=matchMedia('(pointer:coarse)').matches||navigator.maxTouchPoints>0;
   function updateInputMode(){const mode=inputMode.value;document.documentElement.dataset.inputMode=mode;touchUI.root.hidden=!(state.screen==='playing'&&(mode==='touch'||(mode==='auto'&&coarse)));if(mode==='vr'&&!document.fullscreenElement)document.querySelector('.game-frame').requestFullscreen?.().catch(()=>{});}
   inputMode.addEventListener('change',updateInputMode);updateInputMode();
-  function bindStick(button,kind){let id=null,cx=0,cy=0;const knob=button.querySelector('i');function move(e){if(e.pointerId!==id)return;const dx=e.clientX-cx,dy=e.clientY-cy,r=button.clientWidth*.34,len=Math.hypot(dx,dy),scale=len>r?r/len:1,x=dx*scale,y=dy*scale;knob.style.transform=`translate(${x}px,${y}px)`;if(kind==='move'){state.touchMove.x=x/r;state.touchMove.y=y/r}else{const mag=Math.hypot(x,y);if(mag>.14){const rect=canvas.getBoundingClientRect();state.pointer.x=Math.max(0,Math.min(W,(player.x+Math.cos(Math.atan2(y,x))*W*.42)));state.pointer.y=Math.max(0,Math.min(H,(player.y+Math.sin(Math.atan2(y,x))*H*.42)));state.pointer.down=true}}e.preventDefault()}function end(e){if(e.pointerId!==id)return;id=null;knob.style.transform='';if(kind==='move'){state.touchMove.x=0;state.touchMove.y=0}else state.pointer.down=false;try{button.releasePointerCapture(e.pointerId)}catch{}}button.addEventListener('pointerdown',e=>{if(e.button!==0)return;id=e.pointerId;const r=button.getBoundingClientRect();cx=r.left+r.width/2;cy=r.top+r.height/2;button.setPointerCapture(id);move(e)});button.addEventListener('pointermove',move);button.addEventListener('pointerup',end);button.addEventListener('pointercancel',end)}
+  function bindStick(button,kind){
+    let id=null,cx=0,cy=0,offsetX=0,offsetY=0;
+    const knob=button.querySelector('i');
+    function move(e){
+      if(e.pointerId!==id)return;
+      const radius=button.clientWidth*.34;
+      let dx=e.clientX-cx,dy=e.clientY-cy,length=Math.hypot(dx,dy);
+      if(length>radius*.72){
+        const follow=length-radius*.72,ux=dx/length,uy=dy/length,bounds=canvas.getBoundingClientRect();
+        const nextX=Math.max(bounds.left+radius,Math.min(bounds.right-radius,cx+ux*follow));
+        const nextY=Math.max(bounds.top+radius,Math.min(bounds.bottom-radius,cy+uy*follow));
+        const sx=nextX-cx,sy=nextY-cy;
+        cx=nextX;cy=nextY;offsetX+=sx;offsetY+=sy;
+        button.style.transform='translate('+offsetX+'px, '+offsetY+'px)';
+        dx-=sx;dy-=sy;length=Math.hypot(dx,dy);
+      }
+      const scale=length>radius?radius/length:1,x=dx*scale,y=dy*scale;
+      knob.style.transform='translate('+x+'px, '+y+'px)';
+      if(kind==='move'){state.touchMove.x=x/radius;state.touchMove.y=y/radius}
+      else if(Math.hypot(x,y)>radius*.14){
+        state.pointer.x=Math.max(0,Math.min(W,player.x+Math.cos(Math.atan2(y,x))*W*.42));
+        state.pointer.y=Math.max(0,Math.min(H,player.y+Math.sin(Math.atan2(y,x))*H*.42));
+        state.pointer.down=true;
+      }
+      e.preventDefault();
+    }
+    function end(e){
+      if(e.pointerId!==id)return;
+      id=null;knob.style.transform='';button.style.transform='';offsetX=0;offsetY=0;
+      if(kind==='move'){state.touchMove.x=0;state.touchMove.y=0}else state.pointer.down=false;
+      try{button.releasePointerCapture(e.pointerId)}catch{}
+    }
+    button.addEventListener('pointerdown',e=>{
+      if(e.button!==0)return;
+      id=e.pointerId;const r=button.getBoundingClientRect();cx=r.left+r.width/2;cy=r.top+r.height/2;
+      try{button.setPointerCapture(id)}catch{}
+      move(e);
+    });
+    window.addEventListener('pointermove',move,{passive:false});
+    window.addEventListener('pointerup',end);window.addEventListener('pointercancel',end);
+  }
   bindStick(touchUI.move,'move');bindStick(touchUI.aim,'aim');
   $('#touch-dash').addEventListener('pointerdown',e=>{e.preventDefault();if(state.screen==='playing')dash()});$('#touch-pause').onclick=pause;
   let padDashWasDown=false,padPauseWasDown=false,padFire=false,padUpgradeWasDown=false;

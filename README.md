@@ -2,6 +2,10 @@
 
 A single-room, top-down survival game built with Canvas, CSS, and vanilla JavaScript. Hold the room, collect experience, upgrade your build, and see how long you last.
 
+![Higgsfield-generated concept art inspired by One Room, 100 Monsters](assets/one-room-100-monsters-gameplay.png)
+
+*Higgsfield-generated concept art for the game.*
+
 ## Features
 
 - One responsive arena with procedural Canvas visuals
